@@ -50,9 +50,13 @@
 package com.janrain.android.engage.net;
 
 import android.os.Handler;
+import android.util.Log;
+
 import com.janrain.android.engage.net.async.HttpResponseHeaders;
 import com.janrain.android.utils.IOUtils;
 import com.janrain.android.utils.LogUtils;
+import com.janrain.android.utils.T2CookieStore;
+
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -63,6 +67,7 @@ import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectHandler;
@@ -75,6 +80,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.Arrays;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import static com.janrain.android.engage.net.JRConnectionManager.ManagedConnection;
@@ -95,7 +101,8 @@ import static com.janrain.android.engage.net.async.HttpResponseHeaders.fromRespo
     private AsyncHttpClient() {}
 
     /*package*/ static class HttpExecutor implements Runnable {
-        final private Handler mHandler;
+        private static final String TAG = "HttpExecutor";
+		final private Handler mHandler;
         final private ManagedConnection mConn;
         final private DefaultHttpClient mHttpClient;
 
@@ -209,6 +216,27 @@ import static com.janrain.android.engage.net.async.HttpResponseHeaders.fromRespo
                         throw e;
                     }
                 }
+                
+                // Check to see if a Drupal session cookie was returned in the response
+                // If so, save it for later use in posting
+                List<Cookie> cookies1 = mHttpClient.getCookieStore().getCookies();
+                if (cookies1.isEmpty()) {
+                    System.out.println("No Cookies!!!");
+                } else {
+                    for (int i = 0; i < cookies1.size(); i++) {
+                        Cookie cookie = cookies1.get(i);
+                    	System.out.println("Cookie! - " + cookie.toString());
+                    	System.out.println("Cokie Name - " + cookie.getName());
+                    	
+                    	if (cookie.getName().startsWith("SESS") || cookie.getName().startsWith("SSESS")) {
+                    		// This is the session cookie
+                    		T2CookieStore t2CookieStore = T2CookieStore.getInstance();
+                    		t2CookieStore.setSessionCookie(cookie);
+                    		Log.e(TAG, "saving session cookie: " + cookie.toString()); 
+                    	}
+                    }
+                }                 
+                
 
                 if (mConn.getHttpRequest().isAborted()) throw new AbortedRequestException();
 
