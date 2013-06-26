@@ -217,26 +217,26 @@ import static com.janrain.android.engage.net.async.HttpResponseHeaders.fromRespo
                     }
                 }
                 
-                // Check to see if a Drupal session cookie was returned in the response
-                // If so, save it for later use in posting
-                List<Cookie> cookies1 = mHttpClient.getCookieStore().getCookies();
-                if (cookies1.isEmpty()) {
-                    System.out.println("No Cookies!!!");
-                } else {
-                    for (int i = 0; i < cookies1.size(); i++) {
-                        Cookie cookie = cookies1.get(i);
-                    	System.out.println("Cookie! - " + cookie.toString());
-                    	System.out.println("Cokie Name - " + cookie.getName());
-                    	
-                    	if (cookie.getName().startsWith("SESS") || cookie.getName().startsWith("SSESS")) {
-                    		// This is the session cookie
-                    		T2CookieStore t2CookieStore = T2CookieStore.getInstance();
-                    		t2CookieStore.setSessionCookie(cookie);
-                    		Log.e(TAG, "saving session cookie: " + cookie.toString()); 
-                    	}
-                    }
-                }                 
-                
+//                // Check to see if a Drupal session cookie was returned in the response
+//                // If so, save it for later use in posting
+//                List<Cookie> cookies1 = mHttpClient.getCookieStore().getCookies();
+//                if (cookies1.isEmpty()) {
+//                    System.out.println("No Cookies!!!");
+//                } else {
+//                    for (int i = 0; i < cookies1.size(); i++) {
+//                        Cookie cookie = cookies1.get(i);
+//                    	System.out.println("Cookie! - " + cookie.toString());
+//                    	System.out.println("Cokie Name - " + cookie.getName());
+//                    	
+//                    	if (cookie.getName().startsWith("SESS") || cookie.getName().startsWith("SSESS")) {
+//                    		// This is the session cookie
+//                    		T2CookieStore t2CookieStore = T2CookieStore.getInstance();
+//                    		t2CookieStore.setSessionCookie(cookie);
+//                    		Log.e(TAG, "saving session cookie: " + cookie.toString()); 
+//                    	}
+//                    }
+//                }                 
+//                
 
                 if (mConn.getHttpRequest().isAborted()) throw new AbortedRequestException();
 
