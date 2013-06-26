@@ -391,12 +391,13 @@ public class JRProviderListFragment extends JRUiFragment {
         String rapName = session.getReturningAuthProvider();
         JRProvider provider = session.getProviderByName(rapName);
 
-        if (shouldOpenDirectToUserLandingPage(session)) {
-            session.setCurrentlyAuthenticatingProvider(provider);
-            Intent i = JRFragmentHostActivity.createUserLandingIntent(jrfh);
-            i.putExtra(JR_FRAGMENT_FLOW_MODE, JR_FRAGMENT_FLOW_AUTH);
-            jrfh.startActivityForResult(i, JRUiFragment.REQUEST_LANDING);
-        }
+        // T2 Janrain Tweaks comment out so all providers always showing
+//        if (shouldOpenDirectToUserLandingPage(session)) {
+//            session.setCurrentlyAuthenticatingProvider(provider);
+//            Intent i = JRFragmentHostActivity.createUserLandingIntent(jrfh);
+//            i.putExtra(JR_FRAGMENT_FLOW_MODE, JR_FRAGMENT_FLOW_AUTH);
+//            jrfh.startActivityForResult(i, JRUiFragment.REQUEST_LANDING);
+//        }
     }
 
     public void finishJrSignin() {
